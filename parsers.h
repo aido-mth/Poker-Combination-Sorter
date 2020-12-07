@@ -51,45 +51,33 @@ std::vector<Card> ParseHand(std::string hand) {
             // Getting card rank
             if (hand[i] > '0' && hand[i] <= '9') {
                 rank = static_cast<CardRank>(hand[i] - '0');
+            } else if (hand[i] == 'T') {
+                rank = CardRank::TEN;
+            } else if (hand[i] == 'J') {
+                rank = CardRank::JACK;
+            } else if (hand[i] == 'Q') {
+                rank = CardRank::QUEEN;
+            } else if (hand[i] == 'K') {
+                rank = CardRank::KING;
+            } else if (hand[i] == 'A') {
+                rank = CardRank::ACE;
             } else {
-                switch (hand[i]) {
-                    case 'T':
-                        rank = CardRank::TEN;
-                        break;
-                    case 'J':
-                        rank = CardRank::JACK;
-                        break;
-                    case 'Q':
-                        rank = CardRank::QUEEN;
-                        break;
-                    case 'K':
-                        rank = CardRank::KING;
-                        break;
-                    case 'A':
-                        rank = CardRank::ACE;
-                        break;
-                    default:
-                        throw ParseException("Unknown card rank");
-                }
+                throw ParseException("Unknown card rank");
             }
 
             // Getting card suit
-            switch (hand[i + 1]) {
-                case 'h':
-                    suit = CardSuit::HEART;
-                    break;
-                case 'd':
-                    suit = CardSuit::DIAMOND;
-                    break;
-                case 'c':
-                    suit = CardSuit::CLUB;
-                    break;
-                case 's':
-                    suit = CardSuit::SPADE;
-                    break;
-                default:
-                    throw ParseException("Unknown suit");
+            if (hand[i + 1] == 'h') {
+                suit = CardSuit::HEART;
+            } else if (hand[i + 1] == 'd') {
+                suit = CardSuit::DIAMOND;
+            } else if (hand[i + 1] == 'c') {
+                suit = CardSuit::CLUB;
+            } else if (hand[i + 1] == 's') {
+                suit = CardSuit::SPADE;
+            } else {
+                throw ParseException("Unknown suit");
             }
+
             card.suit = suit;
             card.rank = rank;
             answer.push_back(card);
@@ -105,7 +93,7 @@ std::vector<std::vector<Card>> GetHands(std::vector<std::string> lines, size_t s
     for (size_t i = start; i < lines.size(); ++i) {
         std::vector<Card> hand = ParseHand(lines[i]);
         if (hand.size() != hand_size) {
-            throw ParseException("Invalid holdem hand");
+            throw ParseException("Invalid hand size");
         }
         hands.push_back(hand);
     }
