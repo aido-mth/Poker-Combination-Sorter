@@ -72,9 +72,9 @@ bool CheckEqual(const Combination& lhs, const Combination& rhs) {
     return !CombinationComparator(lhs, rhs) && !CombinationComparator(rhs, lhs);
 }
 
-bool CombaratorWrapper(const Combination& lhs, const Combination& rhs) {
+bool ComparatorWrapper(const Combination& lhs, const Combination& rhs) {
     if (CheckEqual(lhs, rhs)) {
-        return lhs.hand[0].suit < rhs.hand[0].suit;
+        return lhs.hand < rhs.hand;
     } else {
         return CombinationComparator(lhs, rhs);
     }
@@ -85,22 +85,22 @@ void SortCombinations() {
     while (std::getline(std::cin, line)) {
         try {
             auto combinations = getHigherCombinations(ParseLine(Split(line)));
-            std::stable_sort(combinations.begin(), combinations.end(), CombaratorWrapper);
-            std::cout << handToString(combinations[0].hand);
+            std::stable_sort(combinations.begin(), combinations.end(), ComparatorWrapper);
+            std::cout << combinations[0].hand;
             for (size_t i = 1; i < combinations.size() - 1; ++i) {
                 if (CheckEqual(combinations[i - 1], combinations[i])) {
                     std::cout << "=";
                 } else {
                     std::cout << " ";
                 }
-                std::cout << handToString(combinations[i].hand);
+                std::cout << combinations[i].hand;
             }
             if (CheckEqual(combinations.back(), combinations[combinations.size() - 2])) {
                 std::cout << "=";
             } else {
                 std::cout << " ";
             }
-            std::cout << handToString(combinations.back().hand) << '\n';
+            std::cout << combinations.back().hand << '\n';
         } catch (ParseException& e) {
             std::cout << "Error: " << e.what() << '\n';
         } catch (...) {

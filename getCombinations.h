@@ -8,7 +8,7 @@ enum CombinationType {
 struct Combination {
     CombinationType type = HIGH_CARD;
     std::vector<Card> combination;
-    std::vector<Card> hand;
+    std::string hand;
 };
 
 bool CardComparator(Card lhs, Card rhs) {
@@ -70,7 +70,7 @@ Combination getCombination(std::vector<Card> hand) {
      */
     Combination combination;
     if (CheckStraightFlush(hand)) {
-        std::vector<Card> start_hand = combination.hand;
+        std::string start_hand = combination.hand;
         std::vector<Card> clubs, diamonds, hearts, spades;
         Combination clubsCombination, diamondsCombination, heartsCombination, spadesCombination;
 
@@ -178,7 +178,7 @@ Combination getCombination(std::vector<Card> hand) {
             }
         }
     } else if (CheckStraight(hand)) {
-        std::vector<Card> start_hand = combination.hand;
+        std::string start_hand = combination.hand;
         combination = getStraight(hand);
         combination.type = STRAIGHT;
         combination.hand = start_hand;
@@ -289,7 +289,7 @@ std::vector<Combination> getHigherCombinations(Game game) {
 
     for (auto hand: game.players_cards) {
         // Save hand to get it in the end
-        std::vector<Card> saved_hand = hand;
+        std::string saved_hand = handToString(hand);
         // Mix hand cards with board
         hand.insert(hand.begin(), game.board.begin(), game.board.end());
         // Sort hand by increasing rank
