@@ -2,7 +2,7 @@
 #include <string>
 
 enum CardSuit {
-    DIAMOND, CLUB, HEART, SPADE
+    CLUB, DIAMOND, HEART, SPADE
 };
 enum CardRank {
     TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE

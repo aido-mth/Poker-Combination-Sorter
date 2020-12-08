@@ -57,32 +57,32 @@ Combination getStraight(std::vector<Card> &hand) {
 }
 
 Combination getCombination(std::vector<Card> hand) {
+    /*
+     * Combination we get has such form:
+     * Straight Flush: a, b, c, d, e | a > b > c > d > e
+     * FourOfKind: a, b, c, d, e | a == b == c == d, e - max element from hand + board - {a, b, c, d}
+     * FullHouse: a, b, c, d, e | a == b == c, d == e
+     * Flush: a, b, c, d, e | a > b > c > d > e
+     * ThreeOfKind: a, b, c, d, e | a == b == c, d > e
+     * TwoPair: a, b, c, d, e | a == b, b > c, c == d, e - max element from hand + board - {a, b, c, d}
+     * OnePair: a, b, c, d, e | a == b, c > d > e
+     * HighCard: a, b, c, d, e | a > b > c > d > e
+     */
     Combination combination;
     if (CheckStraightFlush(hand)) {
-        std::vector<Card> startHand = combination.hand;
-        combination.type = CombinationType::STRAIGHT_FLUSH;
-        std::vector<Card> clubs;
-        std::vector<Card> diamonds;
-        std::vector<Card> hearts;
-        std::vector<Card> spades;
-        Combination clubsCombination;
-        Combination diamondsCombination;
-        Combination heartsCombination;
-        Combination spadesCombination;
+        std::vector<Card> start_hand = combination.hand;
+        std::vector<Card> clubs, diamonds, hearts, spades;
+        Combination clubsCombination, diamondsCombination, heartsCombination, spadesCombination;
+
         for (auto &el : hand) {
-            switch (el.suit) {
-                case CardSuit::CLUB:
-                    clubs.push_back(el);
-                    break;
-                case CardSuit::HEART:
-                    hearts.push_back(el);
-                    break;
-                case CardSuit::DIAMOND:
-                    diamonds.push_back(el);
-                    break;
-                case CardSuit::SPADE:
-                    spades.push_back(el);
-                    break;
+            if (el.suit == CLUB) {
+                clubs.push_back(el);
+            } else if (el.suit == HEART) {
+                hearts.push_back(el);
+            } else if (el.suit == DIAMOND) {
+                diamonds.push_back(el);
+            } else {
+                spades.push_back(el);
             }
         }
 
@@ -95,10 +95,11 @@ Combination getCombination(std::vector<Card> hand) {
         } else if (spades.size() >= 5) {
             combination = getStraight(spades);
         }
-        combination.type = CombinationType::STRAIGHT_FLUSH;
-        combination.hand = startHand;
+
+        combination.type = STRAIGHT_FLUSH;
+        combination.hand = start_hand;
     } else if (CheckFourOfKind(hand)) {
-        combination.type = CombinationType::FOUR_OF_KIND;
+        combination.type = FOUR_OF_KIND;
         std::map<CardRank, size_t> counter;
         std::set<CardRank> fours;
         for (auto &el : hand) {
@@ -120,7 +121,7 @@ Combination getCombination(std::vector<Card> hand) {
             }
         }
     } else if (CheckFullHouse(hand)) {
-        combination.type = CombinationType::FULL_HOUSE;
+        combination.type = FULL_HOUSE;
         std::map<CardRank, size_t> count;
         std::set<CardRank> pairs;
         std::set<CardRank> triplets;
@@ -157,7 +158,7 @@ Combination getCombination(std::vector<Card> hand) {
             }
         }
     } else if (CheckFlush(hand)) {
-        combination.type = CombinationType::FLUSH;
+        combination.type = FLUSH;
         std::map<CardSuit, size_t> count;
         CardSuit FlushSuit;
         for (auto &el : hand) {
@@ -177,12 +178,12 @@ Combination getCombination(std::vector<Card> hand) {
             }
         }
     } else if (CheckStraight(hand)) {
-        std::vector<Card> startHand = combination.hand;
+        std::vector<Card> start_hand = combination.hand;
         combination = getStraight(hand);
-        combination.type = CombinationType::STRAIGHT;
-        combination.hand = startHand;
+        combination.type = STRAIGHT;
+        combination.hand = start_hand;
     } else if (CheckThreeOfKind(hand)) {
-        combination.type = CombinationType::THREE_OF_KIND;
+        combination.type = THREE_OF_KIND;
         std::map<CardRank, size_t> count;
         std::set<CardRank> triplets;
         CardRank TripletRank;
@@ -208,7 +209,7 @@ Combination getCombination(std::vector<Card> hand) {
             }
         }
     } else if (CheckTwoPairs(hand)) {
-        combination.type = CombinationType::TWO_PAIR;
+        combination.type = TWO_PAIR;
         std::map<CardRank, size_t> count;
         std::set<CardRank> pairs;
         for (auto &el : hand) {
@@ -244,7 +245,7 @@ Combination getCombination(std::vector<Card> hand) {
             }
         }
     } else if (CheckPair(hand)) {
-        combination.type = CombinationType::PAIR;
+        combination.type = PAIR;
         std::map<CardRank, size_t> count;
         CardRank PairRank;
         for (auto &el : hand) {
@@ -267,7 +268,7 @@ Combination getCombination(std::vector<Card> hand) {
             }
         }
     } else {
-        combination.type = CombinationType::HIGH_CARD;
+        combination.type = HIGH_CARD;
         for (auto i = hand.rbegin(); i != hand.rend(); ++i) {
             if (combination.combination.size() == 5) {
                 break;
